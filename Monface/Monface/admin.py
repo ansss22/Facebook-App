@@ -7,3 +7,11 @@ admin.site.register(Job)
 admin.site.register(Employee)
 admin.site.register(Campus)
 admin.site.register(Message)
+
+
+class StudentAdmin(admin.ModelAdmin):
+    filter_horizontal = ('amis',)
+
+
+class EmployeeAdmin(admin.ModelAdmin):
+    filter_horizontal = ('amis',)
