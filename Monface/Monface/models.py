@@ -1,7 +1,7 @@
 from django.db import models
 
 class Faculty(models.Model) :
-    nom=models.CharField(max_length=32)
+    nom=models.CharField(max_length=42)
     def __str__(self):
         return self.nom
 
@@ -23,16 +23,16 @@ class Message(models.Model):
     def __str__(self):
         return self.contenu
 class Campus(models.Model) :
-    nom=models.CharField(max_length=32)
+    nom=models.CharField(max_length=42)
     adresse=models.CharField(max_length=60)
     def __str__(self):
         return self.nom
 class Job(models.Model) :
-    titre=models.CharField(max_length=32)
+    titre=models.CharField(max_length=42)
     def __str__(self):
         return self.titre
 class Cursus(models.Model) :
-    titre=models.CharField(max_length=32)
+    titre=models.CharField(max_length=42)
     def __str__(self):
         return self.titre
 class Student(Person):
@@ -41,7 +41,7 @@ class Student(Person):
     def __str__(self):
         return self.name
 class Employee(Person):
-    office=models.CharField(max_length=32)
+    office=models.CharField(max_length=42)
     campus=models.ForeignKey('Campus',on_delete=models.CASCADE)
     job=models.ForeignKey('Job',on_delete=models.CASCADE)
     def __str__(self):

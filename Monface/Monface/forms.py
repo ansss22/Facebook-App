@@ -1,5 +1,5 @@
 from django import forms 
-from Monface.models import Person
+from Monface.models import Person, Student,Employee
 class LoginForm(forms.Form):
     email=forms.EmailField(label='Email')
     password=forms.CharField(label='Mot de passe',widget=forms.PasswordInput)
@@ -12,3 +12,13 @@ class LoginForm(forms.Form):
             if len(Result) != 1:
                 raise forms.ValidationError("Adresse ou mot de pas incorrects.")
         return cleaned_data
+
+class StudentProfilForm(forms.ModelForm):
+    class Meta :
+        model = Student
+        exclude=('Amis',)
+
+class EmployeeProfilForm(forms.ModelForm):
+    class Meta:
+        model = Employee
+        exclude = ('Amis',)
