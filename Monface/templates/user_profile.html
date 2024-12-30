@@ -7,10 +7,16 @@
     <h2>Créez votre profil</h2>
     <p>Choisissez si vous souhaitez vous inscrire en tant qu'étudiant ou employé.</p>
 
+    <!-- Gestion des erreurs globales -->
+    {% if error_message %}
+    <div class="alert alert-danger">
+        <p>{{ error_message }}</p>
+    </div>
+    {% endif %}
+
     <!-- Formulaire d'inscription -->
     <form action="/register/" method="post">
         {% csrf_token %}
-        <!-- Champs de votre formulaire ici -->
         <div class="form-group">
             <label for="user_type">Type de compte</label>
             <select name="user_type" id="user_type" class="form-control" required>
@@ -18,35 +24,21 @@
                 <option value="employee">Employé</option>
             </select>
         </div>
+
         <div id="student_form" class="profile-form" style="display:none;">
             <h3>Inscription en tant qu'Étudiant</h3>
-            <div class="form-group">
-                {{ studentForm.as_p }}
-            </div>
+            {{ studentForm.as_p }}
         </div>
 
         <div id="employee_form" class="profile-form" style="display:none;">
             <h3>Inscription en tant qu'Employé</h3>
-            <div class="form-group">
-                {{ employeeForm.as_p }}
-            </div>
+            {{ employeeForm.as_p }}
         </div>
 
         <div class="form-group mt-3">
             <button type="submit" class="btn btn-primary">S'inscrire</button>
         </div>
     </form>
-    {% if studentForm.errors %}
-    <div class="alert alert-danger">
-        <ul>
-            {% for field in studentForm %}
-            {% for error in field.errors %}
-            <li>{{ error }}</li>
-            {% endfor %}
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
 </div>
 
 <script>
@@ -66,6 +58,4 @@
     // Affiche le formulaire étudiant par défaut au chargement de la page
     document.getElementById('user_type').dispatchEvent(new Event('change'));
 </script>
-
-
 {% endblock %}

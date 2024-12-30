@@ -17,7 +17,7 @@ def register(request):
         user_type = request.POST.get('user_type')
         if user_type == 'student':
             studentForm = StudentProfilForm(request.POST)
-            employeeForm = None
+            employeeForm = None  # Pas besoin de gérer l'autre formulaire ici
             if studentForm.is_valid():
                 studentForm.save()
                 return redirect('/login')
@@ -25,7 +25,7 @@ def register(request):
                 return render(request, 'user_profile.html', {'studentForm': studentForm, 'user_type': user_type})
         elif user_type == 'employee':
             employeeForm = EmployeeProfilForm(request.POST)
-            studentForm = None
+            studentForm = None  # Pas besoin de gérer l'autre formulaire ici
             if employeeForm.is_valid():
                 employeeForm.save()
                 return redirect('/login')
@@ -33,7 +33,7 @@ def register(request):
                 return render(request, 'user_profile.html', {'employeeForm': employeeForm, 'user_type': user_type})
     else:
         studentForm = StudentProfilForm()
-        employeeForm = EmployeeProfilForm()  # Assurez-vous de créer une instance de EmployeeProfilForm
+        employeeForm = EmployeeProfilForm()
         return render(request, 'user_profile.html', {'studentForm': studentForm, 'employeeForm': employeeForm})
 
 def welcome(request):
