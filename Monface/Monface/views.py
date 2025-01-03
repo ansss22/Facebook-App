@@ -12,29 +12,38 @@ def login(request):
         loginform = LoginForm()
         return render(request, 'login.html', {'form': loginform})
 
+from django.shortcuts import render, redirect
+from .forms import StudentProfilForm, EmployeeProfilForm
+
 def register(request):
     if request.method == "POST":
-        user_type = request.POST.get('user_type')
-        if user_type == 'student':
-            studentForm = StudentProfilForm(request.POST)
-            employeeForm = None  # Pas besoin de gérer l'autre formulaire ici
-            if studentForm.is_valid():
-                studentForm.save()
-                return redirect('/login')
-            else:
-                return render(request, 'user_profile.html', {'studentForm': studentForm, 'user_type': user_type})
-        elif user_type == 'employee':
-            employeeForm = EmployeeProfilForm(request.POST)
-            studentForm = None  # Pas besoin de gérer l'autre formulaire ici
-            if employeeForm.is_valid():
-                employeeForm.save()
-                return redirect('/login')
-            else:
-                return render(request, 'user_profile.html', {'employeeForm': employeeForm, 'user_type': user_type})
+        user_type = request.POST.get("user_type")
+        if not user_type:
+            print("Erreur: aucun type d'utilisateur sélectionné")
+            return render(request, "user_profile.html", {"error": "Veuillez sélectionner un type d'utilisateur"})
+
+        studentForm = StudentProfilForm(request.POST)
+        employeeForm = EmployeeProfilForm(request.POST)
+
+        if user_type == "student" and studentForm.is_valid():
+            studentForm.save()  # Enregistrer les données de l'étudiant
+            return redirect("/login/")
+
+        elif user_type == "employee" and employeeForm.is_valid():
+            employeeForm.save()  # Enregistrer les données de l'employé
+            return redirect("/login/")
+
+        else:
+            print("Formulaire invalid:", studentForm.errors if user_type == "student" else employeeForm.errors)
+
     else:
         studentForm = StudentProfilForm()
         employeeForm = EmployeeProfilForm()
-        return render(request, 'user_profile.html', {'studentForm': studentForm, 'employeeForm': employeeForm})
+
+    return render(request, "user_profile.html", {
+        "studentForm": studentForm,
+        "employeeForm": employeeForm,
+    })
 
 def welcome(request):
     return render(request, 'welcome.html')

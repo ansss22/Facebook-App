@@ -1,61 +1,53 @@
 {% extends "base.html" %}
 
-{% block title %}Création d'un profil{% endblock %}
+{% block title %}Création d'un compte{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2>Créez votre profil</h2>
-    <p>Choisissez si vous souhaitez vous inscrire en tant qu'étudiant ou employé.</p>
+<h2>Création d'un compte</h2>
+<form id="userTypeForm">
+    <label for="user_type">Vous êtes :</label>
+    <select id="user_type" name="user_type" onchange="toggleForm()">
+        <option value="student">Étudiant</option>
+        <option value="employee">Employé</option>
+    </select>
+</form>
 
-    <!-- Gestion des erreurs globales -->
-    {% if error_message %}
-    <div class="alert alert-danger">
-        <p>{{ error_message }}</p>
-    </div>
-    {% endif %}
+<form action="/register/" method="post" id="studentForm">
+    {% csrf_token %}
+    {{ studentForm.as_p }}
+    <input type="hidden" name="user_type" value="student">
+    <button type="submit" class="btn btn-primary">Créer un compte Étudiant</button>
+</form>
 
-    <!-- Formulaire d'inscription -->
-    <form action="/register/" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="user_type">Type de compte</label>
-            <select name="user_type" id="user_type" class="form-control" required>
-                <option value="student">Étudiant</option>
-                <option value="employee">Employé</option>
-            </select>
-        </div>
+<form action="/register/" method="post" id="employeeForm" style="display:none;">
+    {% csrf_token %}
+    {{ employeeForm.as_p }}
+    <input type="hidden" name="user_type" value="employee">
+    <button type="submit" class="btn btn-primary">Créer un compte Employé</button>
+</form>
 
-        <div id="student_form" class="profile-form" style="display:none;">
-            <h3>Inscription en tant qu'Étudiant</h3>
-            {{ studentForm.as_p }}
-        </div>
+<!-- Affichage des erreurs du formulaire -->
+{% if studentForm.errors %}
+    <ul>
+        {% for field, error_list in studentForm.errors.items %}
+            <li>{{ field }}: {{ error_list }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 
-        <div id="employee_form" class="profile-form" style="display:none;">
-            <h3>Inscription en tant qu'Employé</h3>
-            {{ employeeForm.as_p }}
-        </div>
-
-        <div class="form-group mt-3">
-            <button type="submit" class="btn btn-primary">S'inscrire</button>
-        </div>
-    </form>
-</div>
+{% if employeeForm.errors %}
+    <ul>
+        {% for field, error_list in employeeForm.errors.items %}
+            <li>{{ field }}: {{ error_list }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 
 <script>
-    document.getElementById('user_type').addEventListener('change', function () {
-        var studentForm = document.getElementById('student_form');
-        var employeeForm = document.getElementById('employee_form');
-
-        if (this.value === 'student') {
-            studentForm.style.display = 'block';
-            employeeForm.style.display = 'none';
-        } else if (this.value === 'employee') {
-            studentForm.style.display = 'none';
-            employeeForm.style.display = 'block';
-        }
-    });
-
-    // Affiche le formulaire étudiant par défaut au chargement de la page
-    document.getElementById('user_type').dispatchEvent(new Event('change'));
+    function toggleForm() {
+        const userType = document.getElementById("user_type").value;
+        document.getElementById("studentForm").style.display = userType === "student" ? "block" : "none";
+        document.getElementById("employeeForm").style.display = userType === "employee" ? "block" : "none";
+    }
 </script>
 {% endblock %}

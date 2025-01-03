@@ -14,11 +14,23 @@ class LoginForm(forms.Form):
         return cleaned_data
 
 class StudentProfilForm(forms.ModelForm):
-    class Meta :
+    class Meta:
         model = Student
-        exclude=('Amis',)
+        exclude = ('Amis',)
+        widgets = {
+            'date_naissance': forms.DateInput(attrs={'type': 'date'}),
+        }
 
 class EmployeeProfilForm(forms.ModelForm):
     class Meta:
         model = Employee
-        exclude = ('Amis',)
+        fields = ['name', 'prenom', 'date_naissance', 'email', 'tlf', 'faculty', 'password', 'office', 'campus', 'job']
+        # Assure-toi d'inclure tous les champs nécessaires ici
+
+    # Ajoute un contrôle de validation si nécessaire
+    def clean(self):
+        cleaned_data = super().clean()
+        # Par exemple, on peut vérifier si un champ particulier est vide
+        if not cleaned_data.get('email'):
+            raise forms.ValidationError("L'email est obligatoire")
+        return cleaned_data
